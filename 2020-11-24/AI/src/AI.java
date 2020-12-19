@@ -18,6 +18,7 @@ public class AI extends MIDlet
 	public void pauseApp(){
 	}
 }
+// class MainCanvas extends Canvas 
 class MainCanvas extends Canvas implements Runnable
 {
 	Thread thread;
@@ -29,8 +30,10 @@ class MainCanvas extends Canvas implements Runnable
 
 	int heroX;//英雄x坐标
 	int heroY;//英雄y坐标
+	
 	int bossX;
 	int bossY;
+	
 	int flag;//步数哨兵
 	int bossFlag;
 
@@ -58,11 +61,12 @@ class MainCanvas extends Canvas implements Runnable
 			//第二维步子：0左，1右
 			for(int i=0;i<boss.length;i++){
 				for(int j=0;j<boss[i].length;j++){
-					boss[i][j]=Image.createImage("manuke0"+2*i+j+".png");
+					boss[i][j]=Image.createImage("/manuke0"+2*i+j+".png");
 				}
 			}
 
 			currentImg=hero[1][0];	
+			// currentBossImg=Image.createImage("/manuke000.png");
 			currentBossImg=boss[0][0];
 				
 			heroX=120;
@@ -169,31 +173,31 @@ class MainCanvas extends Canvas implements Runnable
 	public int boss(){
 		int difX;
 		int difY;
-		difX=this.bossX-this.heroX;
-		difY=this.bossY-this.heroY;
-		if(difX>difY){
-			if(this.bossX>this.heroX){
-				this.bossX-=3;
+		difX=bossX-heroX;
+		difY=bossY-heroY;
+		if(Math.abs(difX)>Math.abs(difY)){
+			if(bossX>heroX){
+				bossX-=3;
 				return 2;
 			}
 			else{
-				this.bossX+=3;
+				bossX+=3;
 				return 6;
 			}
 		}
 		else{
-			if(this.bossY>this.heroY){
-				this.bossY-=3;
+			if(bossY>heroY){
+				bossY-=3;
 				return 4;
 			}
 			else{
-				this.bossY-=3;
+				bossY+=3;
 				return 0;
 			}
 		}
 		
 	}
-	
+
 	public void run(){
 		while(true){
 			try{
@@ -212,28 +216,30 @@ class MainCanvas extends Canvas implements Runnable
 			if(bossAction>=0){
 				if(bossFlag%2==0){
 					switch(bossAction){
-						case 0:currentBossImg=boss[0][0];flag++;break;
-						case 2:currentBossImg=boss[1][0];flag++;break;
-						case 4:currentBossImg=boss[2][0];flag++;break;
-						case 6:currentBossImg=boss[3][0];flag++;break;
+						case 0:currentBossImg=boss[0][0];bossFlag++;break;
+						case 2:currentBossImg=boss[1][0];bossFlag++;break;
+						case 4:currentBossImg=boss[2][0];bossFlag++;break;
+						case 6:currentBossImg=boss[3][0];bossFlag++;break;
 					}
 				}
 				else if(bossFlag%2==1){
 					switch(bossAction){
-						case 0:currentBossImg=boss[0][1];flag++;break;
-						case 2:currentBossImg=boss[1][1];flag++;break;
-						case 4:currentBossImg=boss[2][1];flag++;break;
-						case 6:currentBossImg=boss[3][1];flag++;break;
+						case 0:currentBossImg=boss[0][1];bossFlag++;break;
+						case 2:currentBossImg=boss[1][1];bossFlag++;break;
+						case 4:currentBossImg=boss[2][1];bossFlag++;break;
+						case 6:currentBossImg=boss[3][1];bossFlag++;break;
 					}
 				}
-			
+				bossActionLast2=bossActionLast;//记录上两步
+				bossActionLast=bossAction;//记录上一步
 			}
 			else{
 				currentBossImg=boss[0][0];
 			}
-			
+			repaint();
 		}
 		
-		repaint();
+		
 	}
+
 }
