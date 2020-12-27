@@ -1,3 +1,5 @@
+import java.text.DecimalFormat;
+
 public class Customer {
     private String id;
     private String password;
@@ -10,7 +12,9 @@ public class Customer {
     }
 
     public void setId(String id) {
-        this.id = id;
+        double d=Double.parseDouble(id);
+        DecimalFormat df=new DecimalFormat("#");
+        this.id = df.format(d);
     }
 
     public String getPassword() {
@@ -42,7 +46,9 @@ public class Customer {
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        double d=Double.parseDouble(phone);
+        DecimalFormat df=new DecimalFormat("#");
+        this.phone = df.format(d);
     }
 
     public boolean login(){

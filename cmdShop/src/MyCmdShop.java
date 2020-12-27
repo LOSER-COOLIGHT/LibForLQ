@@ -22,6 +22,24 @@ public class MyCmdShop {
             System.out.println(o.getAddress());
             System.out.println(o.getPhone());
         }
-
+        Customer user=new Customer();
+        user.setId(in.next());
+        user.setPassword(in.next());
+        for (Customer o :
+                cs) {
+            if (user.getId().equals(o.getId())){
+                if(user.getPassword().equals(o.getPassword())){
+                    System.out.println("登录成功");
+                    break;
+                }
+                else {
+                    System.out.println("密码错误");
+                }
+            }
+            else {
+                System.out.println("账号不存在");
+            }
+        }
+        in.close();
     }
 }
