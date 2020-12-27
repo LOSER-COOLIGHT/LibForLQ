@@ -1,14 +1,19 @@
+import java.text.DecimalFormat;
+
 public class Product {
     private String id;
     private String name;
     private float price;
+    private String info;
 
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        double d=Double.parseDouble(id);
+        DecimalFormat df=new DecimalFormat("#");
+        this.id = df.format(d);
     }
 
     public String getName() {
@@ -25,5 +30,13 @@ public class Product {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 }
