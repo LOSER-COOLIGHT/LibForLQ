@@ -1,30 +1,28 @@
 import java.io.File;
+import java.io.InputStream;
 import java.util.Scanner;
 
 public class MyCmdShop {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
         System.out.println("欢迎使用本系统！\n");
-        System.out.println("请登录");
-        System.out.println("请输入用户名或id:");
-        Scanner in=new Scanner(System.in);
 
-//        cs.setName(in.nextLine());
-//        cs.setPassword(in.nextLine());
-        File fp=new File("res\\Customer.xls");
+        /*读取所有客户信息*/
+        InputStream ins=Class.forName("MyCmdShop").getResourceAsStream("/Customer.xls");
         ExcelReader er=new ExcelReader();
         Customer[] cs=null;
-        cs=er.readExcel(fp);
-        for (Customer o :
-                cs) {
-            System.out.println(o.getId());
-            System.out.println(o.getPassword());
-            System.out.println(o.getName());
-            System.out.println(o.getAddress());
-            System.out.println(o.getPhone());
-        }
+        cs=er.readExcel(ins);
+
+        /*登录*/
+        System.out.println("请登录");
+        System.out.println("请输入id:");
+        Scanner in=new Scanner(System.in);
         Customer user=new Customer();
-        user.setId(in.next());
-        user.setPassword(in.next());
+        user.setId(in.next());//获取id
+
+        System.out.println("请输入密码:");
+        user.setPassword(in.next());//获取密码
+        /*登录验证*/
+        int idf=cs.length;
         for (Customer o :
                 cs) {
             if (user.getId().equals(o.getId())){
@@ -37,7 +35,7 @@ public class MyCmdShop {
                 }
             }
             else {
-                System.out.println("账号不存在");
+                if (--idf==0) System.out.println("帐号不存在");
             }
         }
         in.close();

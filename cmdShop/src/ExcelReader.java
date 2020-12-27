@@ -7,15 +7,16 @@ import org.apache.poi.ss.usermodel.CellType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class ExcelReader {
     /*
     readExcel是什么方法？成员方法
      */
-    public Customer[] readExcel(File file) {
+    public Customer[] readExcel(InputStream inputStream) {
         Customer users[] = null;
         try {
-            HSSFWorkbook xw = new HSSFWorkbook(new FileInputStream(file));
+            HSSFWorkbook xw = new HSSFWorkbook(inputStream);
             HSSFSheet xs = xw.getSheetAt(0);
             users = new Customer[xs.getLastRowNum()];
             for (int j = 1; j <= xs.getLastRowNum(); j++) {
