@@ -13,31 +13,31 @@ public class MyCmdShop {
         cs=er.readExcel(ins);
 
         /*登录*/
-        System.out.println("请登录");
-        System.out.println("请输入id:");
-        Scanner in=new Scanner(System.in);
-        Customer user=new Customer();
-        user.setId(in.next());//获取id
+        login:
+        while (true) {
+            System.out.println("请登录");
+            System.out.println("请输入id:");
+            Scanner in = new Scanner(System.in);
+            Customer user = new Customer();
+            user.setId(in.next());//获取id
 
-        System.out.println("请输入密码:");
-        user.setPassword(in.next());//获取密码
-        /*登录验证*/
-        int idf=cs.length;
-        for (Customer o :
-                cs) {
-            if (user.getId().equals(o.getId())){
-                if(user.getPassword().equals(o.getPassword())){
-                    System.out.println("登录成功");
-                    break;
+            System.out.println("请输入密码:");
+            user.setPassword(in.next());//获取密码
+            /*登录验证*/
+            int idf = cs.length;
+            for (Customer o :
+                    cs) {
+                if (user.getId().equals(o.getId())) {
+                    if (user.getPassword().equals(o.getPassword())) {
+                        System.out.println("登录成功");
+                        break login;
+                    } else {
+                        System.out.println("密码错误");
+                    }
+                } else {
+                    if (--idf == 0) System.out.println("帐号不存在");
                 }
-                else {
-                    System.out.println("密码错误");
-                }
-            }
-            else {
-                if (--idf==0) System.out.println("帐号不存在");
             }
         }
-        in.close();
     }
 }
