@@ -83,7 +83,7 @@ public class ExcelReader {
 
     private String getValue(HSSFCell cell) {
         String value;
-        CellType type = cell.getCellTypeEnum();
+        CellType type = cell.getCellType();
 
         switch (type) {
             case STRING:
