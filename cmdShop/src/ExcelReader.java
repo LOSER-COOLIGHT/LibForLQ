@@ -8,12 +8,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 
 public class ExcelReader {
+
     /*
-    readExcel是什么方法？成员方法
-     */
-    public Customer[] readExcelCustomer(InputStream inputStream) {
+    * 获取所有用户信息
+    * @inputStream 顾客信息输入流
+    * @return 用户信息数组
+    * */
+    public Customer[] getAllCustomer(InputStream inputStream) {
         Customer users[] = null;
 
         try {
@@ -48,7 +52,12 @@ public class ExcelReader {
         return users;
     }
 
-    public Product[] readExcelProduct(InputStream inputStream){
+    /*
+    * 获取所有商品信息
+    * @inputStream 商品信息输入流
+    * @return 商品信息数组
+    * */
+    public Product[] getAllProduct(InputStream inputStream){
         Product products[] = null;
 
         try {
@@ -79,6 +88,49 @@ public class ExcelReader {
             e.printStackTrace();
         }
         return products;
+    }
+
+    /*
+    * 通过商品id获取商品信息
+    * @id 商品id
+    * @inputStream 商品信息输入流
+    * @return 商品信息
+    * */
+    public Product getProductById(String id,InputStream inputStream){
+        Product product=new Product();
+        try {
+            HSSFWorkbook xw = new HSSFWorkbook(inputStream);
+            HSSFSheet xs = xw.getSheetAt(0);
+
+            for (int j = 1; j <= xs.getLastRowNum(); j++) {
+                HSSFRow row = xs.getRow(j);
+                HSSFCell cell = row.getCell(0);
+
+                /*id格式标准化*/
+                double d=Double.parseDouble(this.getValue(cell));
+                DecimalFormat df=new DecimalFormat("#");
+
+                if (df.format(d).equals(id)){
+                    for (int k = 0; k <= row.getLastCellNum(); k++) {
+                        cell = row.getCell(k);
+                        if (k == 0) {
+                            product.setId(this.getValue(cell));
+                        } else if (k == 1) {
+                            product.setName(this.getValue(cell));
+                        } else if(k==2){
+                            product.setPrice(Float.parseFloat(this.getValue(cell)));
+                        } else if (k==3){
+                            product.setInfo(this.getValue(cell));
+                        }
+                    }
+                    return product;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     private String getValue(HSSFCell cell) {
