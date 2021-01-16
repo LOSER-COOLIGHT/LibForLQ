@@ -1,4 +1,5 @@
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Scanner;
 
 public class MyCmdShop {
@@ -11,13 +12,13 @@ public class MyCmdShop {
         ExcelReader er=new ExcelReader();
         Customer[] cs=null;
         cs=er.getAllCustomer(ins);
+        Customer user = new Customer();
 
         /*登录*/
         login:
         while (true) {
             System.out.println("\n请登录");
             System.out.println("请输入id:");
-            Customer user = new Customer();
             user.setId(in.next());//获取id
 
             System.out.println("请输入密码:");
@@ -63,7 +64,7 @@ public class MyCmdShop {
                 System.out.println("请输入要加入购物车的商品id，输入0退出");
 
                 ins = Class.forName("MyCmdShop").getResourceAsStream("/Product.xls");
-                String id = in.next();
+                String id = in.next();//读取输入的商品id
                 if (id.equals("0")) {
                     break;//输入0退出
                 } else {
@@ -73,15 +74,15 @@ public class MyCmdShop {
                         continue;
                     }
                     if (capacity < cart.length) {
-                        cart[capacity++] = product;
+                        cart[capacity++] = product;//商品放入购物车
                         System.out.println("添加成功");
                     } else {
                         Product[] cartUp = new Product[cart.length + 1];//购物车扩容
                         for (int i = 0; i < cart.length; i++) {
-                            cartUp[i] = cart[i];
+                            cartUp[i] = cart[i];//扩容后记录原购物车内的物品
                         }
-                        cartUp[capacity++] = product;
-                        cart = cartUp;
+                        cartUp[capacity++] = product;//新商品放入扩容购物车
+                        cart = cartUp;//购物车更新
                         System.out.println("添加成功");
                     }
 
@@ -97,8 +98,13 @@ public class MyCmdShop {
             System.out.println(o.getId() + "\t" + o.getName() + "\t" + o.getPrice() + "\t" + o.getInfo());
             }*/
             Order order = new Order();
+            order.setOwner(user);
             order.setCart(cart);
+            order.setTime(new Date());
             order.showCart();
+            Order[] orders=new Order[1];
+            orders[0]=order;
+            order.record(orders);
 
             Pay:
             while (true) {
@@ -109,6 +115,7 @@ public class MyCmdShop {
                         ;
                         return;
                     case 1://付款;
+
                         break Pay;
                     case 2:
                         ;

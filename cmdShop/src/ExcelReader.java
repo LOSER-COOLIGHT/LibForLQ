@@ -9,6 +9,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ExcelReader {
 
@@ -131,6 +134,66 @@ public class ExcelReader {
         }
 
         return null;
+    }
+
+    /*
+    * 查找所有订单的信息
+    * @inputStream 订单信息输入流
+    * @return 订单信息
+    * */
+    public Order[] getAllOrder(InputStream inputStream){
+        Order[] orders=null;
+
+        try {
+            HSSFWorkbook xw = new HSSFWorkbook(inputStream);
+            HSSFSheet xs = xw.getSheetAt(0);
+            orders = new Order[xs.getLastRowNum()];
+            for (int j = 1; j <= xs.getLastRowNum(); j++) {
+                HSSFRow row = xs.getRow(j);
+                Order order=new Order();
+
+                for (int k = 0; k <= row.getLastCellNum(); k++) {
+                    HSSFCell cell = row.getCell(k);
+                    if (cell == null)
+                        continue;
+                    if (k == 0) {
+                        order.setId(this.getValue(cell));
+                    } else if (k == 1) {
+                        Customer customer=new Customer();
+                        customer.setId(this.getValue(cell));
+                        order.setOwner(customer);
+                    } else if(k==2){
+                        Product[] product=new Product[1];
+                        Product cart=new Product();
+                        cart.setId(this.getValue(cell));
+                        product[0]=cart;
+                        order.setCart(product);
+                    } else if (k==3){
+                        int[] num=new int[1];
+                        double d=Double.parseDouble(this.getValue(cell));
+                        DecimalFormat df=new DecimalFormat("#");
+                        num[0]=Integer.parseInt(df.format(d));
+                        order.setProductNum(num);
+                    } else if (k==4){
+                        SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        try {
+                            order.setTime(df.parse(df.format(new Date())));
+                        }catch (ParseException e){
+                            e.printStackTrace();
+                        }
+
+                    } else if (k==5){
+                        order.setNeedPay(Double.parseDouble(this.getValue(cell)));
+                    } else if (k==6){
+                        order.setRealPat(Double.parseDouble(this.getValue(cell)));
+                    }
+
+                }orders[j-1]=order;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return orders;
     }
 
     private String getValue(HSSFCell cell) {
